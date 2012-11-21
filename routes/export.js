@@ -8,7 +8,8 @@ var mootools = require('mootools'),
 
 // Load file system
     fs = require('fs');
-
+    
+var spawn = require('child_process').spawn;
 
 // Load the database
 // Todo: Load this from a configuration file
@@ -112,10 +113,10 @@ exports.post = function(req, res) {
 
     // Set up the settings 
     var rasterize = {
-        input: '<html><body><h1>hello</h1></body></html>',
+        input: 'http://apple.com',
         output: {
             format: 'png',
-            screen: { width: 1800, height: 900 },
+            screen: { width: 800, height: 600 },
         },
     };
 
