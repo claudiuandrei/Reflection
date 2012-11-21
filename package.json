@@ -1,0 +1,16 @@
+{
+  "name": "reflection",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.0.3",
+    "hjs": "*",
+    "less-middleware": "*",
+    "mootools": "*",
+    "MD5": "*",
+    "validator": "*",
+  }
+}
