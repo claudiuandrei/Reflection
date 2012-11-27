@@ -1,0 +1,12 @@
+{
+    "db": {
+        "connection": "mongodb://localhost/test",
+        "options": null
+    },
+    "routes": {
+        "base": "export"
+    },
+    "errors": {
+        "request": "Request error, the file is not on our server"
+    }
+}

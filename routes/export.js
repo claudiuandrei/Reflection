@@ -7,21 +7,25 @@
 var mootools = require('mootools'),
 
 // Load file system
-    fs = require('fs');
+    fs = require('fs'),
     
-var spawn = require('child_process').spawn;
+    spawn = require('child_process').spawn,
+    
+// Load the configuration file
+    config = JSON.parse(fs.readFileSync('config/export.json', 'utf8')),
 
 // Load the database
-// Todo: Load this from a configuration file
-var mongo = require('mongoose'),
+    mongo = require('mongoose'),
 
-    // Create the database connection
-    db = mongo.createConnection('localhost', 'test'),
+// Create the database connection
+    db = mongo.createConnection(config.db.connection, config.db.options),
     
-    // Create a database model
+// Create a database model
     resources = db.model('Resources', new mongo.Schema({ format: String, output: String }));
 
-exports.error = function(err, res){
+// Eport an error page
+exports.error = function(err, res) {
+    
     // Set the page status code
     res.status(404);
     
@@ -29,57 +33,42 @@ exports.error = function(err, res){
     res.render('index', { title: err });
 };
 
+// Export the output
 exports.output = function(req, res) {
 
     // Add the location
-    // Use this from config file
-    req.data.location = req.protocol + '://' + req.headers.host + '/export/' + req.data._id + '.' + req.data.format;
-    
-    // Set up the default output
-    var output = req.data.output;
-    
-    // Set the default content type prefix
-    var prefix = 'image';
-    
-    // Default files are encoded
-    var encoding = true;
+    req.data.location = req.protocol + '://' + req.headers.host + '/' + config.routes.base + '/' + req.data._id + '.' + req.data.format;
     
     // Check if we can render the format
     if (['json', req.data.format].indexOf(req.params.format) === -1) {
         
         // Return a 404
-        return res = exports.error('Unsupported format', res);
+        return res = exports.error(config.errors.request, res);
     }
     
     // Create the output
     switch (req.params.format) {
         case 'json':
             
-            // Set the output as a JSON string
-            output = JSON.stringify(req.data);
+            // Return the output data with the proper headers
+            res.contentType('application/json');
             
-            // JSON files are not encoded
-            encoding = false;
+            // Return the output data with the proper headers
+            res.send(JSON.stringify(req.data));
             
-        case 'pdf':
-            
-            // Set the application prefix
-            prefix = 'application';
+            break;
         
         case 'png':
         case 'jpg':
         case 'gif':
         
             // Return the output data with the proper headers
-            res.contentType(prefix + '/' + req.params.format);
+            res.contentType('image/' + req.data.format);
             
             // Return the output data with the proper headers
-            res.send((encoding === true) ? new Buffer(output, 'base64') : output);
+            res.send(new Buffer(req.data.output, 'base64'));
            
             break;
-        
-        default:
-            return res = exports.error(req.data._id, res);
     }
     
     // Return the response object
@@ -97,6 +86,11 @@ exports.get = function(req, res) {
             return res = exports.error(err, res);
         }
         
+        // The id it is not in the database
+        if (!data) {
+            return res = exports.error(config.errors.request, res);
+        }
+        
         // Load the in the request
         req.data = JSON.parse(JSON.stringify(data));
         
@@ -109,16 +103,7 @@ exports.get = function(req, res) {
 exports.post = function(req, res) {
 
     // Read data from the JSON request
-    // var rasterize = req.body;
-
-    // Set up the settings 
-    var rasterize = {
-        input: 'http://apple.com',
-        output: {
-            format: 'png',
-            screen: { width: 800, height: 600 },
-        },
-    };
+    var rasterize = req.body;
 
     // Create the image
     var phantom  = spawn('phantomjs', ['phantom/rasterize.js', JSON.stringify(rasterize) ]);
@@ -131,20 +116,23 @@ exports.post = function(req, res) {
         
         // Get the data from the files
         data.output = fs.readFileSync(data.location, 'base64');
+        
+        // Delete the image from the server
+        fs.unlinkSync(data.location);
        
         // Save the image
         resources.create({format: data.format, output: data.output }, function (err, output) {
             
             // Check for errors
             if (err) {
-                return exports.error('Save error', res);
+                return exports.error(err, res);
             }
             
             // Load the in the request
             req.data = JSON.parse(JSON.stringify(output));
                 
             // Set the output format, always use JSON for POST
-            req.params.format = 'json';
+            req.params.format = data.format;
                 
             // Output the data
             return exports.output(req, res);

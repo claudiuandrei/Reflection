@@ -7,6 +7,7 @@
 var express = require('express'),
     http = require('http'),
     path = require('path'),
+    fs = require('fs'),
 
     // Routes
     docs = require('./routes/docs')
@@ -14,6 +15,9 @@ var express = require('express'),
 
 // Create the app
 var app = express();
+
+// Load the configuration file
+var config = JSON.parse(fs.readFileSync('config/export.json', 'utf8'));
 
 // Configure the app
 app.configure(function() {
@@ -39,8 +43,8 @@ app.configure('development', function() {
 });
 
 // Load the data for the routes
-app.get('/export/:id.:format', api.get);
-app.get('/export', api.post);
+app.get('/' + config.routes.base + '/:id.:format', api.get);
+app.post('/' + config.routes.base, api.post);
 app.get('/', docs.index);
 
 // Start the server
