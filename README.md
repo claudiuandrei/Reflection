@@ -35,13 +35,13 @@ Get the saved screenshot data based on an id. You can get either the image direc
 
 Create a new screenshot and save it into the database for later use. The request will return the same json response as a <code>GET /export/_new_resource_id.json</code>.
 
-The include_content parameter can be used on the POST request as a query parameter to get the image data in the response. 
+The __include_content__ parameter can be used on the POST request as a query parameter to get the image data in the response. 
 
 ##### Format
 
 The request parameters need to be in the body and they can be either form-encoded or json:
 
-* __input__ _(defaults to __null__)_
+* __input__ _(defaults to **null**)_
 
 	Contains either a url of the page to capure, or the html content to render. 
 
