@@ -8,7 +8,8 @@ var mootools = require('mootools'),
 
 // Load file system
     fs = require('fs'),
-    
+
+// This is how phantom is loaded
     spawn = require('child_process').spawn,
     
 // Load the configuration file
@@ -21,7 +22,7 @@ var mootools = require('mootools'),
     db = mongo.createConnection(config.db.connection, config.db.options),
     
 // Create a database model
-    resources = db.model('Resources', new mongo.Schema({ format: String, output: String }));
+    resources = db.model('Resources', new mongo.Schema({ format: String, output: String }, config.db.schema));
 
 // Eport an error page
 exports.error = function(err, res) {
@@ -30,7 +31,7 @@ exports.error = function(err, res) {
     res.status(404);
     
     // Return the actual content
-    res.render('index', { title: err });
+    res.render('404', { title: err });
 };
 
 // Export the output
@@ -50,6 +51,14 @@ exports.output = function(req, res) {
     switch (req.params.format) {
         case 'json':
             
+            // Remove the version number
+            delete req.data.__v;
+            
+            // Check if we need to include the content in the JSON response
+            if (!req.query.include_content) {
+                delete req.data.output;
+            }
+                        
             // Return the output data with the proper headers
             res.contentType('application/json');
             
@@ -104,7 +113,7 @@ exports.post = function(req, res) {
 
     // Read data from the JSON request
     var rasterize = req.body;
-
+    
     // Create the image
     var phantom  = spawn('phantomjs', ['phantom/rasterize.js', JSON.stringify(rasterize) ]);
 
@@ -132,7 +141,7 @@ exports.post = function(req, res) {
             req.data = JSON.parse(JSON.stringify(output));
                 
             // Set the output format, always use JSON for POST
-            req.params.format = data.format;
+            req.params.format = 'json';
                 
             // Output the data
             return exports.output(req, res);

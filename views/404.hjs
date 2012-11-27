@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>404 - {{ title }}</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <p>There was an error with your request please review the <a href="/">documentation</a>.</p>
+    </body>
+</html>

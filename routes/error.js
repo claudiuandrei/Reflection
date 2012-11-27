@@ -3,5 +3,5 @@
  */
  
  exports.index = function(req, res){
-  res.render('docs', { title: 'Express' });
+  res.render('404', { title: 'Page not found' });
 };

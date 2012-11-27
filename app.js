@@ -10,11 +10,15 @@ var express = require('express'),
     fs = require('fs'),
 
     // Routes
-    docs = require('./routes/docs')
+    docs = require('./routes/docs'),
+    error = require('./routes/error'),
     api = require('./routes/export');
 
 // Create the app
 var app = express();
+
+// Load the static files separatley
+app.use(express.static(__dirname + '/public'));
 
 // Load the configuration file
 var config = JSON.parse(fs.readFileSync('config/export.json', 'utf8'));
@@ -45,7 +49,12 @@ app.configure('development', function() {
 // Load the data for the routes
 app.get('/' + config.routes.base + '/:id.:format', api.get);
 app.post('/' + config.routes.base, api.post);
+
+// Show the documentation in the index page
 app.get('/', docs.index);
+
+// Catch all other routes and throw a 404 error
+app.get('*', error.index);
 
 // Start the server
 http.createServer(app).listen(app.get('port'), function() {

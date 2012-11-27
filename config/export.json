@@ -1,7 +1,8 @@
 {
     "db": {
         "connection": "mongodb://localhost/test",
-        "options": null
+        "options": null,
+        "schema": { "capped": 256000000 }
     },
     "routes": {
         "base": "export"
