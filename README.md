@@ -31,7 +31,7 @@ Get the saved screenshot data based on an id. You can get either the image direc
     	"location": "http://localhost:3001/export/50b52cb7b002c2f352000001.png"
 	}
 
-## <code>POST /export</code>
+#### <code>POST /export</code>
 
 Create a new screenshot and save it into the database for later use. The request will return the same json response as a <code>GET /export/_new_resource_id.json</code>.
 
@@ -45,27 +45,27 @@ The request parameters need to be in the body and they can be either form-encode
 
 	Contains either a url of the page to capure, or the html content to render. 
 
-* __ouput_format__ _(defaults to __png__)_
+* __ouput_format__ _(defaults to **png**)_
 	
 	The output image format, supports __png__, __jpg__ and __gif__.
 
-* __output_screen_width__ _(defaults to __960__)_
+* __output_screen_width__ _(defaults to **960**)_
 
 	The width of the browser screen when rendering the webpage.
 	
-* __output_screen_height__ _(defaults to __640__)_
+* __output_screen_height__ _(defaults to **640**)_
 
 	The height of the browser screen when renedring the webpage. The screenshot can have a bigger height if there is content beyond the screen size.
 	
-* __output_zoom__ _(defaults to __1__)_
+* __output_zoom__ _(defaults to **1**)_
 
 	Zoom factor for the page.
 
-* __settings_javascript_enabled__ _(defaults to __true__)_
+* __settings_javascript_enabled__ _(defaults to **true**)_
 
 	Enable javascript when rendering the webpage.
 	
-* __settings_load_images__ _(defaults to __true__)_
+* __settings_load_images__ _(defaults to **true**)_
 
 	Enable image loading when rendering the webpage.
 	
@@ -85,7 +85,7 @@ The request parameters need to be in the body and they can be either form-encode
 
 For example a request to take __jpg__ screenshot of the __[http://delphi.us](http://delphi.us)__ page rendered on a __960 x 640 px__ screen will have the following post body:
 
-* <code>input=http://delphi.us&output_format=jpg&output_screen_width=1200&output_screen_height=800</code>
+* <code>input=input=http%3A%2F%2Fdelphi.us&output_format=jpg&output_screen_width=1200&output_screen_height=800</code>
 
 ## Author
 Author(s): Claudiu Andrei
