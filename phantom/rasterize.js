@@ -86,7 +86,7 @@ var Rasterize = new Class({
                  
                 // Check if we could open the remote page
                 if (status === 'success') {     
-                    this.render.delay(2000, this);
+                    this.render.delay(200, this);
                 }
                 
                 // Throw an error here
