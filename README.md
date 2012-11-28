@@ -3,41 +3,41 @@ Screenshot taking API built on top of Node(+ Express) Phantom and Mongo (+ Mongo
 
 ## Dependencies
 
-To run Reflection besides __[Node.js](http://nodejs.org/)__, __[PhantomJS](http://phantomjs.org)__ and __[MongoDB](http://www.mongodb.org)__, you need the following Node.js dependencies: _[Express](http://expressjs.com)_, _[Mongoose](http://mongoosejs.com)_, _[MooTools](http://mootools.net)_, _[Hogan](http://twitter.github.com/hogan.js)_, _[LESS](http://lesscss.org)_ and _[MD5](https://github.com/pvorb/node-md5)_.
+To run Reflection besides __[Node.js](http://nodejs.org/)__, __[PhantomJS](http://phantomjs.org)__ and __[MongoDB](http://www.mongodb.org)__, you need the following Node.js dependencies: _[Express](http://expressjs.com)_, _[Mongoose](http://mongoosejs.com)_, _[MooTools](http://mootools.net)_, _[Hogan](http://twitter.github.com/hogan.js)_, _[LESS](http://lesscss.org)_, _[MD5](https://github.com/pvorb/node-md5)_ and _[marked](https://github.com/chjj/marked)_.
 
 To install the main dependencies for Mountain Lion, follow the [Development Setup](https://github.com/DelphiSolutions/Delphi/wiki/Development-Setup-for-Mac-Mountain-Lion), after that, intall the node dependencies by typing <code>$ sudo npm install</code> in the aplication directory.
 
 ## Usage
 
-#### <code>GET /export/:id.:format</code>
+### <code>GET /export/:id.:format</code>
 
 Get the saved screenshot data based on an id. You can get either the image directly or a JSON representation for it.
 
-* <code>http://localhost:3001/export/50b52cb7b002c2f352000001.png</code>
-* <code>http://localhost:3001/export/50b52cb7b002c2f352000001.json</code>
+* <code>/export/50b52cb7b002c2f352000001.png</code>
+* <code>/export/50b52cb7b002c2f352000001.json</code>
 
-##### Parameters
+#### Parameters
 
 * __include_content__ _(optional)_
 	
 	When set to either true or 1, the JSON response will not contain the base64 image data. Omit this parameter to receive the complete data. 	_(This parameter only affects the JSON response)_
 
-##### Output
+#### Output
 
 	{
     	"_id": "50b52cb7b002c2f352000001",
     	"format": "png",
     	"output": "base64EncodedImageData",
-    	"location": "http://localhost:3001/export/50b52cb7b002c2f352000001.png"
+    	"location": "/export/50b52cb7b002c2f352000001.png"
 	}
 
-#### <code>POST /export</code>
+### <code>POST /export</code>
 
 Create a new screenshot and save it into the database for later use. The request will return the same json response as a <code>GET /export/_new_resource_id.json</code>.
 
 The __include_content__ parameter can be used on the POST request as a query parameter to get the image data in the response. 
 
-##### Format
+#### Format
 
 The request parameters need to be in the body and they can be either form-encoded or json:
 
@@ -69,7 +69,7 @@ The request parameters need to be in the body and they can be either form-encode
 
 	Enable image loading when rendering the webpage.
 	
-##### Defaults
+#### Defaults
 
 	{
     	"input": null,
@@ -81,7 +81,7 @@ The request parameters need to be in the body and they can be either form-encode
     	"settings_load_images": true
 	}
 
-##### Example
+#### Example
 
 For example a request to take __jpg__ screenshot of the __[http://delphi.us](http://delphi.us)__ page rendered on a __960 x 640 px__ screen will have the following post body:
 
@@ -90,4 +90,4 @@ For example a request to take __jpg__ screenshot of the __[http://delphi.us](htt
 ## Author
 Author(s): Claudiu Andrei
 
-#### (C) Copyright 2012, [Delphi Solutions](http://delphi.us)
+### (C) Copyright 2012, [Delphi Solutions](http://delphi.us)

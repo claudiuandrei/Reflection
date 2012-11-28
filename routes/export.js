@@ -1,6 +1,6 @@
 
 /*
- * GET home page.
+ * GET api pages.
  */
 
 // Load dependencies
