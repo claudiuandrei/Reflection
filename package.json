@@ -1,27 +1,27 @@
 {
-  "name": "reflection",
-  "version": "0.2.0",
-  "author": "Claudiu Andrei <claudiu.andrei@gmail.com>",
-  "description": "Screenshot taking API built on top of Node(+ Express) Phantom and Mongo (+ Mongoose).",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/claudiuandrei/Reflection.git"
-  },
-  "private": true,
-  "scripts": {
-    "start": "node app"
-  },
-  "dependencies": {
-    "express": ">=3.0.3",
-    "mongoose" ">=3.4.0",
-    "hjs": ">=0.0.4",
-    "less-middleware": ">=0.1.8",
-    "mootools": ">=1.4.5",
-    "MD5": ">=1.0.1",
-    "marked": ">=0.2.6"
-  },
-  "license": "MIT",
-  "engines": {
-    "node": ">=0.8"
-  }
+    "name": "reflection",
+    "version": "0.2.0",
+    "author": "Claudiu Andrei <claudiu.andrei@gmail.com>",
+    "description": "Screenshot taking API built on top of Node(+ Express) Phantom and Mongo (+ Mongoose).",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/claudiuandrei/Reflection.git"
+    },
+    "private": true,
+    "scripts": {
+        "start": "node app"
+    },
+    "dependencies": {
+        "express": ">=3.0.3",
+        "mongoose": ">=3.4.0",
+        "hjs": ">=0.0.4",
+        "less-middleware": ">=0.1.8",
+        "mootools": ">=1.4.5",
+        "MD5": ">=1.0.1",
+        "marked": ">=0.2.6"
+    },
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.8"
+    }
 }
