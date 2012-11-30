@@ -12,6 +12,9 @@ var mootools = require('mootools'),
 // This is how phantom is loaded
     spawn = require('child_process').spawn,
     
+// Load the events
+    events = require('events'),
+    
 // Load the configuration file
     config = JSON.parse(fs.readFileSync('config/export.json', 'utf8')),
 
@@ -25,33 +28,32 @@ var mootools = require('mootools'),
     resources = db.model('Resources', new mongo.Schema({ format: String, output: String }, config.db.schema));
     
 // Create a queue
-var queue = [],
-    
-    // Callback after the process ends 
-    next = function() {
-        
-        if (queue.length > 0) {
-            
-            // Load the que function
-            var app = queue.shift();
-            
-            // Run the post request
-            return exports.post(app[0], app[1], next);
-        }
-    };
+var queue = 0;
+
+// Load the event emitter
+var thread = new events.EventEmitter;
+
+// Add multiple listeneres
+thread.setMaxListeners(200);
 
 // Do this instead of actually accessing the post thing
 exports.queue = function(req, res) {
     
-    // Push the request to the queue and
-    queue.push([req, res]);
-    
-    // Skip the next stuff on the first request
-    if (queue.length <= config.threads) {
+    // Check if we need to start a process right away
+    if (queue < config.threads) {
         
+        // Add the req to the thread
+        queue++;
+      
         // Run the post request
-        return exports.post(req, res, next);
-    }    
+        return exports.post(req, res);
+    
+    }
+    
+    // Return the result on ready
+    thread.once('ready', function() {
+        return exports.queue(req, res);
+    });
 };
 
 // Eport an error page
@@ -74,7 +76,7 @@ exports.output = function(req, res) {
     if (['json', req.data.format].indexOf(req.params.format) === -1) {
         
         // Return a 404
-        return res = exports.error(config.errors.request, res);
+        return exports.error(config.errors.request, res);
     }
     
     // Create the output
@@ -109,9 +111,6 @@ exports.output = function(req, res) {
            
             break;
     }
-    
-    // Return the response object
-    return res;
 }
 
 // GET /export/:id.:format
@@ -139,7 +138,7 @@ exports.get = function(req, res) {
 };
 
 // POST /export
-exports.post = function(req, res, next) {
+exports.post = function(req, res) {
 
     // Read data from the JSON request
     var rasterize = req.body;
@@ -147,16 +146,18 @@ exports.post = function(req, res, next) {
     // Create the image
     var phantom  = spawn('phantomjs', ['phantom/rasterize.js', JSON.stringify(rasterize) ]);
     
-    phantom.stderr.on('data', function (data) {
-        phantom.diconnect();
-    });
-    
+    // The tread ended
     phantom.on('exit', function() {
-        next();
+        
+        // We have a free thread
+        queue--;
+        
+        // Let the listners know they can pus a new post request
+        thread.emit('ready');
     });
 
     // Export the results to a JSON response
-    return phantom.stdout.on('data', function (data) {
+    phantom.stdout.on('data', function (data) {
         
         // Load and parse the data
         data = JSON.parse(data);
