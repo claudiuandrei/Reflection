@@ -54,11 +54,11 @@ var Rasterize = new Class({
     // Render the page on the server
     render: function() {
    
-        // Load crypto tools
-        var md5 = require('MD5');
+        // Create a random number
+        var string = Math.floor(Math.random() * Math.pow(2, 128)).toString(36).substring(16);
         
         // Save the output file 
-        var file = '/tmp/' +  md5(JSON.stringify(this.params)) + '.' + this.params.output_format;
+        var file = '/tmp/' +  string + '.' + this.params.output_format;
                         
         // Save the file
         this.page.render(file);
@@ -74,20 +74,23 @@ var Rasterize = new Class({
     export: function() {
     
         // Test if this is a url
-        var pattern = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?");
+        var pattern = new RegExp(/(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi);
     
         // This is an external URL
         if (pattern.test(this.params.input)) {
-    
+        
             // Render the remote page
             this.page.open(this.params.input, function(status) {
                  
                 // Check if we could open the remote page
                 if (status === 'success') {     
                     this.render.delay(200, this);
-                }
                 
                 // Throw an error here
+                } else {
+                    // this.render()console.log(status);
+                }
+                
             }.bind(this));
         
         // This is HTML content

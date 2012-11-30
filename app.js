@@ -48,7 +48,7 @@ app.configure('development', function() {
 
 // Load the data for the routes
 app.get('/' + config.routes.base + '/:id.:format', api.get);
-app.post('/' + config.routes.base, api.post);
+app.post('/' + config.routes.base, api.queue);
 
 // Show the documentation in the index page
 app.get('/', docs.index);
