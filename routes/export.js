@@ -164,7 +164,7 @@ exports.post = function(req, res) {
         
         // We have an error
         if (data.status !== 'success') {
-            return exports.error(data.status, res);
+            return res.status(500).send( { error: data.status } );
         }
             
         // Get the data from the files
@@ -186,6 +186,9 @@ exports.post = function(req, res) {
                         
             // Set the output format, always use JSON for POST
             req.params.format = 'json';
+            
+            // Send a created status
+            res.status(201);
                         
             // Output the data
             exports.output(req, res);
