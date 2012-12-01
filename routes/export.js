@@ -63,7 +63,7 @@ exports.error = function(err, res) {
     res.status(404);
     
     // Return the actual content
-    res.render('404', { title: err });
+    return res.render('404', { title: err });
 };
 
 // Export the output
@@ -155,19 +155,24 @@ exports.post = function(req, res) {
         // Let the listners know they can pus a new post request
         thread.emit('ready');
     });
-
+    
     // Export the results to a JSON response
-    phantom.stdout.on('data', function (data) {
+    phantom.stdout.once('data', function (data) {
         
         // Load and parse the data
         data = JSON.parse(data);
+        
+        // We have an error
+        if (data.status !== 'success') {
+            return exports.error(data.status, res);
+        }
             
         // Get the data from the files
         data.output = fs.readFileSync(data.location, 'base64');
             
         // Delete the image from the server
         fs.unlinkSync(data.location);
-           
+    
         // Save the image
         resources.create({format: data.format, output: data.output }, function (err, output) {
                 
@@ -183,7 +188,7 @@ exports.post = function(req, res) {
             req.params.format = 'json';
                         
             // Output the data
-            return exports.output(req, res);
+            exports.output(req, res);
         });
     });
 };

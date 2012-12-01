@@ -64,7 +64,7 @@ var Rasterize = new Class({
         this.page.render(file);
                     
         // Output the response
-        fs.write('/dev/stdout', JSON.stringify( { format: this.params.output_format, location: file } ), 'w');
+        fs.write('/dev/stdout', JSON.stringify( { status: 'success', format: this.params.output_format, location: file } ), 'w');
         
         // Exit phantom after rendering
         phantom.exit();
@@ -88,9 +88,8 @@ var Rasterize = new Class({
                 
                 // Throw an error here
                 } else {
-                    // this.render()console.log(status);
+                    fs.write('/dev/stdout', JSON.stringify( { status: status } ), 'w');
                 }
-                
             }.bind(this));
         
         // This is HTML content
