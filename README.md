@@ -85,7 +85,7 @@ The request parameters need to be in the body and they can be either form-encode
 
 For example a request to take __jpg__ screenshot of the __[http://delphi.us](http://delphi.us)__ page rendered on a __1200 x 800 px__ screen will have the following post body:
 
-* <code>input=input=http%3A%2F%2Fdelphi.us&output_format=jpg&output_screen_width=1200&output_screen_height=800</code>
+* <code>input=http%3A%2F%2Fdelphi.us&output_format=jpg&output_screen_width=1200&output_screen_height=800</code>
 
 ## Author
 Author(s): Claudiu Andrei
